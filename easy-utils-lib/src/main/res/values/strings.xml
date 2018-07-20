@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">easy-utils-lib</string>
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="loading">Loading</string>
+</resources>
