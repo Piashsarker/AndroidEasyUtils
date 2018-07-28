@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,17 +59,23 @@ public class Utils {
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+    private static final String TAG = "EasyUtils";
 
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public static boolean isValidURL(String urlStr) {
+        if(isObjectNull(urlStr)){
+            Log.d(TAG, "Null Object are not allowed.");
+            return false;
+        }
+
         try {
+
             URI uri = new URI(urlStr);
             return uri.getScheme().equals("http") || uri.getScheme().equals("https");
         } catch (Exception e) {
@@ -77,7 +84,6 @@ public class Utils {
     }
 
     public static Bitmap getBitmapFromFile(String path) {
-
         File imageFile = new File(path);
         Bitmap bitmap = null;
         if (imageFile.exists()) {
@@ -150,10 +156,18 @@ public class Utils {
         /**
          * Progress Dialog for User Interaction
          */
-        dialog = new ProgressDialog(context);
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.show();
+        if(title == null  || message == null || title.equals("") || message.equals("")){
+            Log.d(TAG, "Specify title or message");
+            return ;
+        }
+
+        if(dialog ==null){
+            dialog = new ProgressDialog(context);
+            dialog.setTitle(title);
+            dialog.setMessage(message);
+            dialog.show();
+        }
+
     }
 
     public static void hideProgressDialog() {
@@ -231,8 +245,8 @@ public class Utils {
         }
     }
 
-    public static void log(String message) {
-        Log.d("SERVER", message);
+    public static void log(String TAG , String message) {
+        Log.d(TAG, message);
     }
 
 
@@ -263,7 +277,7 @@ public class Utils {
             // Can't read or write
             mExternalStorageAvailable = mExternalStorageWritable = false;
         }
-        Utils.log("External Media: readable=" + mExternalStorageAvailable
+        log(TAG,"External Media: readable=" + mExternalStorageAvailable
                 + " writable=" + mExternalStorageWritable);
 
         // Find the root of the external storage.
@@ -283,7 +297,7 @@ public class Utils {
             f.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Utils.log("File not found. Did you" + " add a WRITE_EXTERNAL_STORAGE permission to the manifest?");
+            Utils.log(TAG, "File not found. Did you" + " add a WRITE_EXTERNAL_STORAGE permission to the manifest?");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -548,6 +562,7 @@ public class Utils {
         /**
          * Progress Dialog for User Interaction
          */
+        if(isObjectNull(dialog) && !isObjectNull(context))
         dialog = new ProgressDialog(context);
         dialog.setTitle("Please wait");
         dialog.setMessage("Loading...");
@@ -567,12 +582,26 @@ public class Utils {
         return   decimalFormat.format(Double.valueOf(amount));
     }
 
-    public static void showExistDialog(final Context context ) {
+    public static void showExitDialog(final Context context, String title , String message){
+        if(isObjectNull(context) || isObjectNull(title) || isObjectNull(message)){
+            Log.d(TAG, "Null Object are not allowed.");
+            return;
+        }
+        showExitDialog(context, title, message, "Exit", "Cancel");
+    }
+
+    public static void showExitDialog(final Context context , String title , String message, String exitButtonText , String cancelButtonText) {
+
+        if(isObjectNull(context) || isObjectNull(title) || isObjectNull(message) || isObjectNull(exitButtonText) || isObjectNull(cancelButtonText)){
+            Log.d(TAG, "Null Object are not allowed.");
+            return;
+        }
+
         new AlertDialog.Builder(context)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Exit App!")
-                .setMessage("Are you sure you want to close application?")
-                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(exitButtonText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -582,7 +611,7 @@ public class Utils {
                     }
 
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -607,6 +636,10 @@ public class Utils {
         return  hours ;
     }
 
+
+    public static boolean isObjectNull(Object object){
+     return (object == null );
+    }
 
 
 }

@@ -22,7 +22,7 @@ public class FontOverride {
         replaceFont(staticTypefaceFieldName, regular);
     }
 
-    protected static void replaceFont(String staticTypefaceFieldName,
+    private static void replaceFont(String staticTypefaceFieldName,
                                       final Typeface newTypeface) {
         try {
             final Field staticField = Typeface.class
