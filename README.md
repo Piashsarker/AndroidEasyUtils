@@ -1,6 +1,8 @@
 # AndroidEasyUtils
 Android Easy Utils is a simple android library that contains some utils method which is much more needed when working of any project. Such as - Network Info, Dialogs, GPS info , Device Info Etc.
 
+[![](https://jitpack.io/v/Piashsarker/AndroidEasyUtils.svg)](https://jitpack.io/#Piashsarker/AndroidEasyUtils)
+
 
 ## Usage 
 
@@ -19,7 +21,7 @@ Android Easy Utils is a simple android library that contains some utils method w
 - Add the dependency to your app level `build.gradle` file. 
 ```java
 	dependencies {
-	     implementation 'com.github.Piashsarker:AndroidEasyUtils:beta-0.1'
+	     implementation 'com.github.Piashsarker:AndroidEasyUtils:1.0.1'
 	}
  ```
   
