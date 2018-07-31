@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Toast;
 import com.upaybd.www.easy_utils_lib.R;
 
@@ -37,7 +38,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,18 +69,7 @@ public class Utils {
     }
 
     public static boolean isValidURL(String urlStr) {
-        if(isObjectNull(urlStr)){
-            Log.d(TAG, "Null Object are not allowed.");
-            return false;
-        }
-
-        try {
-
-            URI uri = new URI(urlStr);
-            return uri.getScheme().equals("http") || uri.getScheme().equals("https");
-        } catch (Exception e) {
-            return false;
-        }
+      return  Patterns.WEB_URL.matcher(urlStr).matches();
     }
 
     public static Bitmap getBitmapFromFile(String path) {
@@ -124,7 +113,7 @@ public class Utils {
     }
 
     public static Object getKeyFromValue(Map hm, Object value) {
-        for (Object o : hm.keySet()) {
+        for (Object  o : hm.keySet()) {
             if (hm.get(o).equals(value)) {
                 return o;
             }
@@ -178,28 +167,10 @@ public class Utils {
 
     }
 
-    public static boolean validateEmail(String email){
+    public static boolean isValidEmail(String email){
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(email);
         return matcher.matches();
-    }
-
-
-    /** Checking Internet Availability in Android Works Both Mobile and WIFI
-     Don't forget to add permision in Manifest.xml
-     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-     **/
-
-    public boolean checkInternetConnection(Context context ) {
-
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        return wifi != null && wifi.isConnectedOrConnecting() ||
-                mobile != null && mobile.isConnectedOrConnecting();
-
     }
 
 
@@ -303,16 +274,22 @@ public class Utils {
         }
     }
 
-    public static String getCurrentDate() {
-        String formattedDate = getTimeByFormat("dd-MMM-yyyy hh:mm:ss");
-        return formattedDate ;
+    public static String getCurrentDateTime(String format){
+        return getTimeByFormat(format);
+    }
+
+    public static String getCurrentTime(String format){
+        return getTimeByFormat(format);
+    }
+
+    public static String getCurrentDateTime() {
+        return  getTimeByFormat("dd-MMM-yyyy hh:mm:ss");
     }
 
 
-    public static  String getCurrentTime(){
 
-        String formattedTime =getTimeByFormat("hh:mm");
-        return formattedTime ;
+    public static  String getCurrentTime(){
+       return  getTimeByFormat("hh:mm");
     }
 
 
@@ -320,33 +297,13 @@ public class Utils {
     private static String getTimeByFormat(String format){
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(format);
-        df.setTimeZone(TimeZone.getTimeZone("Asia/Dhaka"));
+        df.setTimeZone(TimeZone.getTimeZone(TimeZone.getDefault().getID()));
         String formattedDate = df.format(c.getTime());
         return formattedDate ;
     }
 
 
-    public static String getGreetings(Context context){
-        String greetings = "";
-        String formattedTime = getTimeByFormat("HH");
-
-        int hour  = Integer.parseInt(formattedTime);
-        if(hour>5 && hour<11){
-            greetings = context.getResources().getString(R.string.good_morning);
-        }
-        else if(hour>11 && hour<17){
-            greetings = context.getResources().getString(R.string.good_afternoon);
-        }
-        else{
-            greetings = context.getResources().getString(R.string.good_evening);
-        }
-
-        return greetings ;
-    }
-
-
-
-    public static boolean validateIP(String ip ){
+    public static boolean isValidIP(String ip ){
         boolean validate = false ;
         Matcher matcher = IP_ADDRESS.matcher(ip);
         if (matcher.matches()) {
@@ -376,7 +333,7 @@ public class Utils {
     }
 
 
-    public static boolean chekcGPSEnable(Context context){
+    public static boolean isGPSEnable(Context context){
 
         final LocationManager manager = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
 
@@ -387,16 +344,20 @@ public class Utils {
     }
 
 
-    public static void showGPSDialog(final Context context){
+    public static void showGPSEnableDialog(final Context context){
+       showGPSEnableDialog(context,"Your GPS seems to be disabled, do you want to enable it?","Yes","No");
+    }
+
+    public static  void showGPSEnableDialog(final Context context , String message , String positiveButtonText, String negativeButtonText){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         context.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                     }
@@ -419,7 +380,7 @@ public class Utils {
 
 
     @SuppressLint("MissingPermission")
-    public static String  getDeviceIEMI(Context context){
+    public static String getDeviceIMEI(Context context){
         String imei="";
         try{
             TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -570,13 +531,19 @@ public class Utils {
     }
 
 
-    public static String getFormatIntegerValue(String amount ){
+
+
+
+
+    public static String getFormatFromIntegerValue(int  value){
+        String amount = String.valueOf(value);
         amount = amount.replaceAll(",","");
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         return   decimalFormat.format(Double.valueOf(amount));
     }
 
-    public static String getFormatDecimalValue(String amount){
+    public static String getFormatFromDecimalValue(Double value){
+        String amount = String.valueOf(value);
         amount = amount.replaceAll(",","");
         DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
         return   decimalFormat.format(Double.valueOf(amount));
