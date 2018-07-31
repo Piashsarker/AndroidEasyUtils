@@ -1,5 +1,5 @@
 # AndroidEasyUtils
-Android Easy Utils is a simple android library that contains some utils method which is much more needed when working of any project. Such as - Network Info, Dialogs, GPS info , Device Info Etc.
+AndroidEasyUtils is a simple android library that contains some utils method which is much more needed when working in any android project. Categories are - Validators, Dialog, Progress Dialog, Connectivity, Date Time, Bitmaps, HashMap and Others.
 
 [![](https://jitpack.io/v/Piashsarker/AndroidEasyUtils.svg)](https://jitpack.io/#Piashsarker/AndroidEasyUtils)
 
