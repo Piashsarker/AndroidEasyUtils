@@ -21,7 +21,8 @@ Android Easy Utils is a simple android library that contains some utils method w
 - Add the dependency to your app level `build.gradle` file. 
 ```java
 	dependencies {
-	     implementation 'com.github.Piashsarker:AndroidEasyUtils:1.0.1'
+	    implementation 'com.github.Piashsarker:AndroidEasyUtils:1.0.0'
+
 	}
  ```
   
