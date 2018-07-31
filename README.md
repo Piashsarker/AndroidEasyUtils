@@ -134,3 +134,7 @@ See Supported Date Time Formats  - https://developer.android.com/reference/java/
 
 For any kinds of support  mail sarkerpt@gmail.com 
 Follow me on Twitter - https://twitter.com/PiashSarker
+
+MIT License
+
+Copyright (c) 2018 Piash Sarker
